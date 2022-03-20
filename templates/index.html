@@ -1,0 +1,30 @@
+<html>
+  <head>
+    <title>Parking Lot Detection</title>
+  </head>
+  <body style="text-align: center">
+    <h1>Parking Lot Detection</h1>
+    <h4>
+      Occupied: <span id="occupied"></span> Available:
+      <span id="available"></span>
+    </h4>
+    <img src="{{ url_for('video_feed') }}" width="100%" />
+  </body>
+
+  <script src="{{ url_for('static', filename='jquery.js') }}"></script>  
+  <script src="{{ url_for('static', filename='socket.io.js') }}"></script>
+  <script type="text/javascript">
+    $(document).ready(function () {
+      var socket = io.connect(
+        "http://" + document.domain + ":" + location.port + "/availability"
+      );
+
+      //receive details from server
+      socket.on("availability", function (msg) {
+        console.log("Received Occupied " + msg.occupied);
+        console.log("Received Available " + msg.available);
+      });
+
+    });
+  </script>
+</html>
