@@ -1,12 +1,11 @@
 from flask import Flask, render_template, Response
-import yaml
-from motion_detector import MotionDetector
-import logging
 
 from flask_socketio import SocketIO, emit
 from threading import Thread, Event
 
 from time import sleep
+
+from parking_management.controllers import play_video, get_current_availability
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -19,7 +18,8 @@ thread = Thread()
 thread_stop_event = Event()
 def get_parking_space_availability():
     while not thread_stop_event.isSet():
-        socketio.emit('availability', {'occupied': str(MotionDetector.OCCUPIED), 'available': str(MotionDetector.LENGTH - MotionDetector.OCCUPIED)}, namespace='/availability')
+        current_availability = get_current_availability()
+        socketio.emit('availability', current_availability, namespace='/availability')
         # try to make it asynchronously
         sleep(2)
 
@@ -30,11 +30,9 @@ def hello():
 
 @socketio.on('connect', namespace='/availability')
 def availability_websocket_connect():
-    # need visibility of the global thread object
     global thread
     print('Client connected')
 
-    #Start the random number generator thread only if the thread has not been started before.
     if not thread.isAlive():
         print("Starting Thread")
         thread = socketio.start_background_task(get_parking_space_availability)
@@ -45,18 +43,11 @@ def availability_websocket_disconnect():
 
 @app.route("/video_feed")
 def video_feed():
-    # make the data file and set in the below variable
-    data_file = 'data/availability3.yml'
-    start_frame = 400
+    return Response(play_video(), mimetype="multipart/x-mixed-replace; boundary=frame")
 
-    with open(data_file, "r") as data:
-        points = yaml.safe_load(data)
-        # set the video file in the below method
-        detector = MotionDetector(
-            'videos/parking_video7.mp4', points, int(start_frame))
-        return Response(detector.detect_motion(),
-                        mimetype="multipart/x-mixed-replace; boundary=frame")
-
+@app.route("/total-availability-count")
+def total_availability_count():
+    pass
 
 if __name__ == '__main__':
     socketio.run(app)

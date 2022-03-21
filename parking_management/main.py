@@ -1,8 +1,8 @@
 import argparse
 import yaml
-from coordinates_generator import CoordinatesGenerator
-from motion_detector import MotionDetector
-from colors import *
+from .coordinates_generator import CoordinatesGenerator
+from .motion_detector import MotionDetector
+from .colors import *
 import logging
 
 

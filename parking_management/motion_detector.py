@@ -1,8 +1,8 @@
 import cv2 as open_cv
 import numpy as np
 import logging
-from drawing_utils import draw_contours
-from colors import COLOR_GREEN, COLOR_WHITE, COLOR_BLUE
+from .drawing_utils import draw_contours
+from .colors import COLOR_GREEN, COLOR_WHITE, COLOR_BLUE
 
 
 class MotionDetector:
@@ -11,7 +11,7 @@ class MotionDetector:
     OCCUPIED = 0
     LENGTH = 0
 
-    def __init__(self, video, coordinates, start_frame):
+    def __init__(self, video, coordinates, start_frame=0):
         self.video = video
         self.coordinates_data = coordinates
         self.start_frame = start_frame
