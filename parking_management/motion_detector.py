@@ -8,8 +8,6 @@ from .colors import COLOR_GREEN, COLOR_WHITE, COLOR_BLUE
 class MotionDetector:
     LAPLACIAN = 1.4
     DETECT_DELAY = 1
-    OCCUPIED = 0
-    LENGTH = 0
 
     def __init__(self, video, coordinates, start_frame=0):
         self.video = video
@@ -18,7 +16,8 @@ class MotionDetector:
         self.contours = []
         self.bounds = []
         self.mask = []
-        MotionDetector.LENGTH = len(self.coordinates_data)
+        self.available = self.length = len(self.coordinates_data)
+        self.occupied = 0
 
     def detect_motion(self):
         capture = open_cv.VideoCapture(self.video)
@@ -88,9 +87,8 @@ class MotionDetector:
                 if times[index] is None and self.status_changed(statuses, index, status):
                     times[index] = position_in_seconds
 
-            free = sum(statuses)
-            MotionDetector.OCCUPIED = MotionDetector.LENGTH - free
-            # print(f"No of available spaces: {MotionDetector.LENGTH} and Occupied: {MotionDetector.OCCUPIED}, Available: {free}")
+            self.available = sum(statuses)
+            self.occupied = self.length - self.available
 
             for index, p in enumerate(coordinates_data):
                 coordinates = self._coordinates(p)
@@ -128,6 +126,9 @@ class MotionDetector:
         logging.debug("status: %s", status)
 
         return status
+
+    def get_current_availability(self):
+        return {'occupied': self.occupied, 'available': self.available}
 
     @staticmethod
     def _coordinates(p):

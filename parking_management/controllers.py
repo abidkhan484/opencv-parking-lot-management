@@ -1,28 +1,38 @@
 import yaml
 from .motion_detector import MotionDetector
 
-def play_video():
-    # make the data file and set in the below variable
-    data_file = 'data/availability3.yml'
-    start_frame = 400
+CAMERA_ID_WITH_DETECTOR_OBJECTS = {}
 
-    with open(data_file, "r") as data:
+def create_motion_detector_object(camera_id):
+    camera_details = get_cameraId_with_coordinates_and_videoURL(camera_id)
+    with open(camera_details['coordinates'], "r") as data:
         points = yaml.safe_load(data)
-        # set the video file in the below method
-        detector = MotionDetector(
-            'videos/parking_video7.mp4', points, int(start_frame))
-        return detector.detect_motion()
+        detector = MotionDetector(camera_details['video'], points)
+        if camera_id not in CAMERA_ID_WITH_DETECTOR_OBJECTS:
+            CAMERA_ID_WITH_DETECTOR_OBJECTS[camera_id] = detector
 
-def get_current_availability():
-    return {'occupied': str(MotionDetector.OCCUPIED), 'available': str(MotionDetector.LENGTH - MotionDetector.OCCUPIED)}
+def get_total_availability():
+    occupied, available = 0, 0
+    availability = {'occupied': 0, 'available': 0}
+    for slot in CAMERA_ID_WITH_DETECTOR_OBJECTS:
+        camera_details = CAMERA_ID_WITH_DETECTOR_OBJECTS[slot].get_current_availability()
+        availability['available'] += camera_details['available']
+        availability['occupied'] += camera_details['occupied']
 
-def play_all_videos():
-    video_objects = {
+    return {'occupied': str(availability['occupied']), 'available': str(availability['available'])}
+
+
+def get_cameraId_with_coordinates_and_videoURL(camera_id):
+    cameraId_with_coordinates_and_videoURL = {
         'camera1': {
             'coordinates': 'data/availability3.yml',
             'video': 'videos/parking_video7.mp4'
+        },
+        'camera2': {
+            'coordinates': 'data/coordinates_1.yml',
+            'video': 'videos/parking_lot_1.mp4'
         }
     }
-
+    return cameraId_with_coordinates_and_videoURL[camera_id]
 
 

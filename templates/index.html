@@ -8,7 +8,10 @@
       Occupied: <span id="occupied"></span> Available:
       <span id="available"></span>
     </h4>
-    <img src="{{ url_for('video_feed') }}" width="100%" />
+    {% for video_url in video_urls %}
+      {# {% set url =  %} #}
+      <img src="{{ video_url }}" width="40%" />
+    {% endfor %}
   </body>
 
   <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.js') }}"></script>  
