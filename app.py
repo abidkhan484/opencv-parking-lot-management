@@ -8,7 +8,8 @@ from time import sleep
 from parking_management.controllers import (
     create_motion_detector_object, 
     get_total_availability, 
-    CAMERA_ID_WITH_DETECTOR_OBJECTS
+    get_current_availability_insert_to_DB,
+    CAMERA_ID_WITH_DETECTOR_OBJECTS,
 )
 
 app = Flask(__name__)
@@ -61,7 +62,8 @@ def video_feed(camera_id):
 
 @app.route("/total-availability-count")
 def total_availability_count():
-    return get_total_availability()
+    print("hello world")
+    return get_current_availability_insert_to_DB()
 
 if __name__ == '__main__':
     socketio.run(app)

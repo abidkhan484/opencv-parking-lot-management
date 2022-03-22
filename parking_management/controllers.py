@@ -1,5 +1,6 @@
 import yaml
 from .motion_detector import MotionDetector
+from .headless_browse import get_current_data_using_headless_browser
 
 CAMERA_ID_WITH_DETECTOR_OBJECTS = {}
 
@@ -35,4 +36,8 @@ def get_cameraId_with_coordinates_and_videoURL(camera_id):
     }
     return cameraId_with_coordinates_and_videoURL[camera_id]
 
-
+def get_current_availability_insert_to_DB():
+    availability = get_current_data_using_headless_browser()
+    print(availability)
+    # validate the data and insert to DB
+    return availability
