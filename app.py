@@ -53,7 +53,9 @@ def availability_websocket_disconnect():
 
 @app.route("/video_feed/<string:camera_id>")
 def video_feed(camera_id):
-    detector = create_motion_detector_object(camera_id) if camera_id not in CAMERA_ID_WITH_DETECTOR_OBJECTS else CAMERA_ID_WITH_DETECTOR_OBJECTS[camera_id]
+    if camera_id not in CAMERA_ID_WITH_DETECTOR_OBJECTS:
+        create_motion_detector_object(camera_id)
+    detector = CAMERA_ID_WITH_DETECTOR_OBJECTS[camera_id]
 
     return Response(
         detector.detect_motion(), 
@@ -62,7 +64,6 @@ def video_feed(camera_id):
 
 @app.route("/total-availability-count")
 def total_availability_count():
-    print("hello world")
     return get_current_availability_insert_to_DB()
 
 if __name__ == '__main__':
