@@ -102,11 +102,11 @@ class MotionDetector:
             yield (b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' +
               bytearray(encodedImage) + b'\r\n')
 
-            k = open_cv.waitKey(1)
-            if k == ord("q"):
-                break
-        capture.release()
-        open_cv.destroyAllWindows()
+        #     k = open_cv.waitKey(1)
+        #     if k == ord("q"):
+        #         break
+        # capture.release()
+        # open_cv.destroyAllWindows()
 
     def __apply(self, grayed, index, p):
         coordinates = self._coordinates(p)
