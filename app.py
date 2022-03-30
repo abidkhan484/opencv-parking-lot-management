@@ -66,6 +66,10 @@ def video_feed(camera_id):
 def total_availability_count():
     return get_current_availability_insert_to_DB()
 
+@app.route("/preview-image")
+def preview_image_to_set_coordinates():
+    return render_template("preview-image.html")
+
 if __name__ == '__main__':
     socketio.run(app)
 
