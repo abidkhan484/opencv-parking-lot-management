@@ -10,6 +10,7 @@ from parking_management.controllers import (
     get_total_availability, 
     get_current_availability_insert_to_DB,
     CAMERA_ID_WITH_DETECTOR_OBJECTS,
+    playVideoUsingCameraId,
 )
 
 app = Flask(__name__)
@@ -65,6 +66,18 @@ def video_feed(camera_id):
 @app.route("/total-availability-count")
 def total_availability_count():
     return get_current_availability_insert_to_DB()
+
+@app.route("/play-video/<string:camera_id>")
+def video_without_coordinates(camera_id):
+    return Response(
+        playVideoUsingCameraId(camera_id), 
+        mimetype="multipart/x-mixed-replace; boundary=frame"
+    )
+
+@app.route("/video-to-image/<string:camera_id>")
+def video_to_image_to_set_coordinates(camera_id):
+    video_url = url_for('video_without_coordinates', camera_id=camera_id)
+    return render_template("video-to-image.html", video_url=video_url)
 
 @app.route("/preview-image")
 def preview_image_to_set_coordinates():

@@ -1,6 +1,9 @@
 $(document).ready(function () {
-    const finalArrayOfCoordinates = [];
-    var linesArray = [];
+    var canvas = document.querySelector("canvas#coordinate_generator_canvas"),
+    context = canvas.getContext('2d'),
+    lineWidth = 1,
+    finalArrayOfCoordinates = [],
+    linesArray = [];
 
     const getMousePosition = (canvas, event) => {
         let rect = canvas.getBoundingClientRect();
@@ -17,8 +20,7 @@ $(document).ready(function () {
         context.stroke();
     }
 
-    canvas.addEventListener("mousedown", function(e)
-    {
+    $(document).on("mousedown", "canvas#coordinate_generator_canvas", (e) => {
         let x, y, x1, y1, arrayLength;
         [x, y] = getMousePosition(canvas, e);
 
@@ -36,6 +38,24 @@ $(document).ready(function () {
             [x1, y1] = linesArray[arrayLength - 2];
             createLine(x, y, x1, y1);
         }
+    });
+
+    $(document).on("click", "#capture_img", () => {
+        context.clearRect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
+
+        var img = document.getElementById("img");
+        context.drawImage(img, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
+        context.beginPath();
+        encodedImg = canvas.toDataURL("image/png");
+
+        // console.log(finalArrayOfCoordinates);
+        finalArrayOfCoordinates = [];
+        linesArray = [];
+        $("#submit_coordinates").show();
+    });
+
+    $(document).on("click", "#submit_coordinates", function() {
+        console.log(finalArrayOfCoordinates);
     });
 
 });
