@@ -2,7 +2,7 @@ from flask import Flask, render_template, Response, url_for
 
 from flask_socketio import SocketIO, emit
 from threading import Thread, Event
-
+import logging
 from time import sleep
 
 from parking_management.controllers import (
@@ -27,7 +27,7 @@ def get_parking_space_availability():
         current_availability = get_total_availability()
         socketio.emit('availability', current_availability, namespace='/availability')
         # try to make it asynchronously
-        sleep(2)
+        sleep(0.5)
 
 
 @app.route('/')
@@ -37,7 +37,14 @@ def homepage():
         'camera2'
     ]
     video_urls = [url_for('video_feed', camera_id=camera_id) for camera_id in camera_ids]
-    return render_template("index.html", video_urls=video_urls)
+    coordinates_generator_urls = [url_for('video_to_image_to_set_coordinates', camera_id=camera_id) for camera_id in camera_ids]
+
+    return render_template(
+        "index.html",
+        camera_ids=camera_ids,
+        video_urls=video_urls,
+        coordinates_generator_urls=coordinates_generator_urls
+    )
 
 @socketio.on('connect', namespace='/availability')
 def availability_websocket_connect():

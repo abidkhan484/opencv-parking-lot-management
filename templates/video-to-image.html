@@ -1,24 +1,29 @@
-<html>
-  <head>
-    <title>Parking Lot Detection</title>
-  </head>
-  <body style="text-align: center">
-    <h1>Nothing Else Matter</h1>
+{% extends 'base.html' %}
 
-    <img id="img" src="{{ video_url }}" width=854 height=480 />
+{% block header %}
+  <h1>{% block title %}Generate Coordinates{% endblock %}</h1>
+{% endblock %}
 
-    <div><button style="padding: 10px; margin: 20px;" id="capture_img">Capture Image</button></div>
-    <div><canvas id="coordinate_generator_canvas" width=854 height=480></canvas></div>
-    <div><button style="padding: 10px; margin: 20px; display: none;" id="submit_coordinates">Submit Coordinates</button></div>
+{% block content %}
+  <div class="row m-5">
+    <div class="col-md-12">
+      <img id="img" src="{{ video_url }}" width=854 height=480 />    
+      <div class="m-5"><button class="btn btn-primary" id="capture_img">Capture Image</button></div>
+    </div>
+  </div>
+  <div class="row" style="display: none;" id="canvas_block">
+    <div class="col-md-12">
+      <div><canvas id="coordinate_generator_canvas" width=854 height=480></canvas></div>
+      <div class="m-5"><button class="btn btn-primary" id="submit_coordinates">Submit Coordinates</button></div>
+    </div>
+  </div>
 
-  </body>
-  <script type="text/javascript">
-    const IMAGE_WIDTH = 854, IMAGE_HEIGHT = 480;      
-  </script>
-  <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+
+{% endblock %}
+
+{% block scripts %}
   <script type="text/javascript" src="{{ url_for('static', filename='js/coordinates_setup.js') }}"></script>
+{% endblock %}
 
 
 
-
-</html>

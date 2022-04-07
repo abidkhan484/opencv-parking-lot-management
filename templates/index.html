@@ -1,19 +1,30 @@
-<html>
-  <head>
-    <title>Parking Lot Detection</title>
-  </head>
-  <body style="text-align: center">
-    <h1>Parking Lot Detection</h1>
-    <h4>
-      Occupied: <span id="occupied"></span> Available:
-      <span id="available"></span>
-    </h4>
-    {% for video_url in video_urls %}
-      <img src="{{ video_url }}" width="40%" />
-    {% endfor %}
-  </body>
+{% extends 'base.html' %}
 
-  <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.js') }}"></script>  
+{% block header %}
+  <h1>{% block title %}Parking Lot Detection{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <h4>
+    Occupied: <span id="occupied"></span> Available:
+    <span id="available"></span>
+  </h4>
+
+  <div class="row">
+    {% for _ in video_urls %}
+      <div class="col-md-12 m-4">
+        <img src="{{ video_urls[loop.index - 1] }}"/>
+        <div class='m-5'>
+          <a class="btn btn-primary" href="{{ coordinates_generator_urls[loop.index - 1] }}">Update Coordinates</a>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}
+
+{% block scripts %}
   <script type="text/javascript" src="{{ url_for('static', filename='js/socket.io.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='js/socket_connection.js') }}"></script>
-</html>
+{% endblock %}
+
+

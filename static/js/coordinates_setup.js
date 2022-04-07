@@ -51,7 +51,7 @@ $(document).ready(function () {
         // console.log(finalArrayOfCoordinates);
         finalArrayOfCoordinates = [];
         linesArray = [];
-        $("#submit_coordinates").show();
+        $("#canvas_block").show();
     });
 
     $(document).on("click", "#submit_coordinates", function() {
