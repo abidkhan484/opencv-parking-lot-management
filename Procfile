@@ -1,1 +1,1 @@
-web: gunicorn wsgi:socketio
+web: gunicorn --bind 0.0.0.0:$PORT wsgi:app
