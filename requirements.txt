@@ -41,6 +41,7 @@ trio==0.20.0
 trio-websocket==0.9.2
 typing_extensions==4.1.1
 urllib3==1.26.9
+uWSGI==2.0.20
 webdriver-manager==3.5.4
 Werkzeug==2.0.3
 wsproto==1.1.0
