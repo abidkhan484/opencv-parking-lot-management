@@ -92,6 +92,4 @@ def video_to_image_to_set_coordinates(camera_id):
 def preview_image_to_set_coordinates():
     return render_template("preview-image.html")
 
-if __name__ == '__main__':
-    socketio.run(app)
 
