@@ -5,17 +5,19 @@ from threading import Thread, Event
 import logging
 from time import sleep
 
-from parking_management.controllers import (
+from parking_management.controller import (
     create_motion_detector_object, 
     get_total_availability, 
     get_current_availability_insert_to_DB,
     CAMERA_ID_WITH_DETECTOR_OBJECTS,
     playVideoUsingCameraId,
+    generate_video_and_coordinates_url_for_homepage,
 )
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 app.config['DEBUG'] = True
+logging.basicConfig(level=logging.INFO)
 
 #turn the flask app into a socketio app
 socketio = SocketIO(app, async_mode=None, logger=True, engineio_logger=True)
@@ -36,8 +38,8 @@ def homepage():
         'camera1', 
         'camera2'
     ]
-    video_urls = [url_for('video_feed', camera_id=camera_id) for camera_id in camera_ids]
-    coordinates_generator_urls = [url_for('video_to_image_to_set_coordinates', camera_id=camera_id) for camera_id in camera_ids]
+
+    [video_urls, coordinates_generator_urls] = generate_video_and_coordinates_url_for_homepage(camera_ids)
 
     return render_template(
         "index.html",
@@ -49,15 +51,15 @@ def homepage():
 @socketio.on('connect', namespace='/availability')
 def availability_websocket_connect():
     global thread
-    print('Client connected')
+    logging.debug('Client connected')
 
     if not thread.isAlive():
-        print("Starting Thread")
+        logging.debug("Starting Thread")
         thread = socketio.start_background_task(get_parking_space_availability)
 
 @socketio.on('disconnect', namespace='/availability')
 def availability_websocket_disconnect():
-    print('Client disconnected')
+    logging.debug('Client disconnected')
 
 @app.route("/video_feed/<string:camera_id>")
 def video_feed(camera_id):
