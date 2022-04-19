@@ -62,15 +62,15 @@ def generate_video_and_coordinates_url_for_homepage(camera_ids):
         camera_details = get_cameraId_with_coordinates_and_videoURL(camera_id)
         if camera_details['coordinates']:
             video_urls.append(
-                url_for('video_feed', camera_id=camera_id)
+                url_for('parking_management.video_feed', camera_id=camera_id)
             )
         else:
             video_urls.append(
-                url_for('video_without_coordinates', camera_id=camera_id)
+                url_for('parking_management.video_without_coordinates', camera_id=camera_id)
             )
 
         coordinates_generator_urls.append(
-            url_for('video_to_image_to_set_coordinates', camera_id=camera_id)
+            url_for('parking_management.video_to_image_to_set_coordinates', camera_id=camera_id)
         )
 
     logging.debug(f"Generated video URLs" + ", ".join(video_urls))
