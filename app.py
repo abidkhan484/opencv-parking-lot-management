@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_socketio import SocketIO
 import logging
-from parking_management import socketio
+from parking_management import socketio, db
 from parking_management.urls import parking_bp
 
 
@@ -16,6 +16,10 @@ def create_app():
     app.register_blueprint(parking_bp, url_prefix='/')
 
     socketio.init_app(app)
+    db.init_app(app)
+
+    with app.app_context():
+        db.create_all()
 
     return app
 

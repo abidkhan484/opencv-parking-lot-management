@@ -12,6 +12,7 @@ imutils = "*"
 selenium = "*"
 webdriver-manager = "*"
 python-dotenv = "*"
+flask-sqlalchemy = "*"
 
 [dev-packages]
 

@@ -5,7 +5,7 @@ import logging
 from time import sleep
 from . import socketio
 
-from parking_management.controller import (
+from parking_management.controllers import (
     create_motion_detector_object, 
     get_total_availability, 
     get_current_availability_insert_to_DB,

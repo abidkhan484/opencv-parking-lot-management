@@ -1,9 +1,9 @@
 import yaml
 import logging
 from flask import url_for
-from .motion_detector import MotionDetector
+from parking_management.video_processor.motion_detector import MotionDetector
+from parking_management.video_processor.coordinates_generator import playVideoUsingVideoURL
 from .headless_browse import get_current_data_using_headless_browser
-from .coordinates_generator import playVideoUsingVideoURL
 
 CAMERA_ID_WITH_DETECTOR_OBJECTS = {}
 
