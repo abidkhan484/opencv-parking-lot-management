@@ -10,6 +10,7 @@
 ```sh
 git clone https://gitlab.ergov.com/abid/parking-lot-monitoring.git
 cd parking-lot-monitoring
+cp .env.example .env
 ```
 2. Install the dependencies using pipenv
 ```sh
