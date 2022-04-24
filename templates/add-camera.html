@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Add New Camera{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+
+<form action="{{ camera_post_url }}" method="POST" enctype="multipart/form-data">
+  <div class="form-group">
+    <label for="camera_url">Camera URL</label>
+    <input type="camera_url" name="camera_url" class="form-control" id="camera-url" aria-describedby="cameraHelp" placeholder="Enter IP camera URL">
+    <small id="cameraHelp" class="form-text text-muted">Camera URL are usually in the RTSP protocol.</small>
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+{% endblock %}
+
+

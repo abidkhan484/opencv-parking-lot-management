@@ -5,6 +5,8 @@ from parking_management.video_processor.motion_detector import MotionDetector
 from parking_management.video_processor.coordinates_generator import playVideoUsingVideoURL
 from .headless_browse import get_current_data_using_headless_browser
 
+from .models import CameraDetails
+
 CAMERA_ID_WITH_DETECTOR_OBJECTS = {}
 
 def create_motion_detector_object(camera_id):
@@ -26,6 +28,36 @@ def get_total_availability():
 
     return {'occupied': str(availability['occupied']), 'available': str(availability['available'])}
 
+def get_all_camera_info():
+    all_camera_object = CameraDetails.query.all()
+    all_camera_details = []
+    count = 0
+    for camera_info in all_camera_object:
+        count += 1
+        all_camera_details.append({
+            'SL': count,
+            'camera_url': camera_info.camera_url,
+            'coordinates_path': camera_info.coordinates,
+            'edit_url': url_for(
+                "parking_management.video_to_image_to_set_coordinates", 
+                camera_id=camera_info.id
+            ),
+            'delete_url': url_for("parking_management.delete_camera_info", camera_id=camera_info.id),
+        })
+    return all_camera_details
+
+def add_new_camera_info(camera_url, coordinates=None):
+    pass
+
+def delete_camera_info(camera_id):
+    # write the delete query
+    status = CameraDetails.query.filter_by(camera_id=camera_id).first_or_404()
+    return status
+
+def edit_camera_info(camera_id):
+    # write the update query
+    status = CameraDetails.query.filter(camera_id=camera_id)
+    return status
 
 def get_cameraId_with_coordinates_and_videoURL(camera_id):
     cameraId_with_coordinates_and_videoURL = {

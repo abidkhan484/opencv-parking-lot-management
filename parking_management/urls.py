@@ -1,9 +1,11 @@
-from flask import render_template, Response, url_for, Blueprint
+from flask import render_template, Response, url_for, Blueprint, request, redirect
 from flask_socketio import SocketIO, emit
 from threading import Thread, Event
 import logging
 from time import sleep
-from . import socketio
+from . import socketio, db
+from .models import CameraDetails
+
 
 from parking_management.controllers import (
     create_motion_detector_object, 
@@ -12,6 +14,9 @@ from parking_management.controllers import (
     CAMERA_ID_WITH_DETECTOR_OBJECTS,
     playVideoUsingCameraId,
     generate_video_and_coordinates_url_for_homepage,
+    get_all_camera_info,
+    add_new_camera_info,
+    delete_camera_info,
 )
 
 
@@ -84,8 +89,39 @@ def video_to_image_to_set_coordinates(camera_id):
     video_url = url_for('parking_management.video_without_coordinates', camera_id=camera_id)
     return render_template("video-to-image.html", video_url=video_url)
 
-@parking_bp.route("/preview-image")
-def preview_image_to_set_coordinates():
-    return render_template("preview-image.html")
+@parking_bp.route("/all-camera")
+def get_all_camera():
+    all_camera_details = get_all_camera_info()
+    add_camera_url = url_for("parking_management.add_camera_form")
+    return render_template(
+        "camera-listing.html", 
+        all_camera_details=all_camera_details, 
+        add_camera_url=add_camera_url
+    )
 
+@parking_bp.route("/add-camera")
+def add_camera_form():
+    camera_post_url = url_for("parking_management.add_new_camera_info")
+    return render_template("add-camera.html", camera_post_url=camera_post_url)
+
+@parking_bp.route("/add-new-camera", methods=("POST",))
+def add_new_camera_info():
+    # add validation
+    camera_url = request.form.get("camera_url")
+    camera_details = CameraDetails(camera_url=camera_url)
+
+    db.session.add(camera_details)
+    db.session.commit()
+    return redirect(url_for("parking_management.add_camera_form"))
+
+@parking_bp.route("/edit-coordinates/:camera_id")
+def edit_camera_info(camera_id):
+    coordinates = request.form.get("coordinates")
+    # resp = edit_camera_info(camera_id=camera_id)
+    return redirect(url_for("parking_management.get_all_camera"))
+
+@parking_bp.route("/delete-camera/:camera_id")
+def delete_camera_info(camera_id):
+    resp = delete_camera_info(camera_id=camera_id)
+    return redirect(url_for("parking_management.get_all_camera"))
 

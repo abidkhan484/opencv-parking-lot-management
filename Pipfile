@@ -13,6 +13,8 @@ selenium = "*"
 webdriver-manager = "*"
 python-dotenv = "*"
 flask-sqlalchemy = "*"
+flask-migrate = "*"
+psycopg2 = "*"
 
 [dev-packages]
 

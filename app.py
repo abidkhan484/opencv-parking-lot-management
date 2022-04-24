@@ -1,9 +1,13 @@
 from flask import Flask
 from flask_socketio import SocketIO
 import logging
+from config.config import Config
 from parking_management import socketio, db
 from parking_management.urls import parking_bp
 
+from flask_migrate import Migrate
+
+migrate = Migrate()
 
 def create_app():
     app = Flask(__name__)
@@ -12,11 +16,12 @@ def create_app():
     logging.basicConfig(level=logging.INFO)
 
     ## Initialize Config
-    app.config.from_pyfile('config/config.py')
+    app.config.from_object(Config())
     app.register_blueprint(parking_bp, url_prefix='/')
 
     socketio.init_app(app)
     db.init_app(app)
+    migrate.init_app(app, db)
 
     with app.app_context():
         db.create_all()

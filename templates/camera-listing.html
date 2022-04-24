@@ -1,0 +1,31 @@
+{% extends 'base.html' %} {% block header %}
+<h1>{% block title %}Add New Camera{% endblock %}</h1>
+{% endblock %} {% block content %}
+
+<div><a href="{{ add_camera_url }}">Add Camera Info</a></div>
+
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Camera URL</th>
+      <th scope="col">Coordinates Path</th>
+      <th scope="col">Update/ Delete</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for camera_info in all_camera_details %}
+      <tr>
+        <th scope="row">{{ camera_info.SL }}</th>
+        <td>{{ camera_info.camera_url }}</td>
+        <td>{{ camera_info.coordinates_path }}</td>
+        <td>
+          <a href="{{ camera_info.edit_url }}">Edit Coordinates</a> | 
+          <a href="{{ camera_info.delete_url }}">Delete</a>
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}
