@@ -1,11 +1,11 @@
 {% extends 'base.html' %} {% block header %}
-<h1>{% block title %}Add New Camera{% endblock %}</h1>
+<h1>{% block title %}All Camera Info{% endblock %}</h1>
 {% endblock %} {% block content %}
 
-<div><a href="{{ add_camera_url }}">Add Camera Info</a></div>
+<a href="{{ add_camera_url }}" class="btn btn-primary mt-2 mb-2" role="button">Add Camera Info</a>
 
 <table class="table table-bordered">
-  <thead>
+  <thead class="text-center">
     <tr>
       <th scope="col">#</th>
       <th scope="col">Camera URL</th>
