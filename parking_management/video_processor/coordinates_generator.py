@@ -1,6 +1,7 @@
 import cv2 as open_cv
 import imutils
 import logging
+from config.constants import VIDEO_HEIGHT, VIDEO_WIDTH
 
 def playVideoUsingVideoURL(video):
     # print(f"Video URL: {video}")
@@ -10,7 +11,7 @@ def playVideoUsingVideoURL(video):
 
     while(cap.isOpened()):
         ret, frame = cap.read()
-        frame = imutils.resize(frame, 854, 480)
+        frame = imutils.resize(frame, VIDEO_WIDTH, VIDEO_HEIGHT)
         if ret == True:
             (flag, encodedImage) = open_cv.imencode('.jpeg', frame)
             if not flag:

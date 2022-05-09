@@ -4,13 +4,11 @@ import numpy as np
 import logging
 from .drawing_utils import draw_contours
 from .colors import COLOR_GREEN, COLOR_WHITE, COLOR_BLUE
-
+from config.constants import VIDEO_HEIGHT, VIDEO_WIDTH
 
 class MotionDetector:
     LAPLACIAN = 1.4
     DETECT_DELAY = 1
-    VIDEO_WIDTH = 854
-    VIDEO_HEIGHT = 480
 
     def __init__(self, video, coordinates, start_frame=0):
         self.video = video
@@ -61,7 +59,7 @@ class MotionDetector:
 
         while capture.isOpened():
             result, frame = capture.read()
-            frame = imutils.resize(frame, MotionDetector.VIDEO_WIDTH, MotionDetector.VIDEO_HEIGHT)
+            frame = imutils.resize(frame, VIDEO_WIDTH, VIDEO_HEIGHT)
             if frame is None:
                 break
 

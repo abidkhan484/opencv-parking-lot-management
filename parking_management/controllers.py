@@ -1,9 +1,12 @@
 import yaml
 import logging
 from flask import url_for
+from parking_management import db
 from parking_management.video_processor.motion_detector import MotionDetector
 from parking_management.video_processor.coordinates_generator import playVideoUsingVideoURL
 from .headless_browse import get_current_data_using_headless_browser
+import numpy as np
+from config.constants import COORDINATES_PATH, COORDINATE_FILENAME_PREFIX
 
 from .models import CameraDetails
 
@@ -46,26 +49,61 @@ def get_all_camera_info():
         })
     return all_camera_details
 
-def add_new_camera_info(camera_url, coordinates=None):
-    pass
-
-def delete_camera_info(camera_id):
-    # write the delete query
-    status = CameraDetails.query.filter_by(camera_id=camera_id).first_or_404()
+def insert_camera_info_to_DB(camera_url, coordinates=None):
+    camera_details = CameraDetails(camera_url=camera_url)
+    status = db.session.add(camera_details)
+    db.session.commit()
     return status
 
-def edit_camera_info(camera_id):
-    # write the update query
-    status = CameraDetails.query.filter(camera_id=camera_id)
+
+def delete_camera_info_using_id(camera_id):
+    status = CameraDetails.query.filter_by(id=camera_id).delete()
+    db.session.commit()
+    return status
+
+def write_coordinates_to_the_file(camera_id, coordinates):
+    filename = COORDINATE_FILENAME_PREFIX + f"{camera_id}.yml"
+    coordinates_text = ""
+    import os
+    filename_with_path = os.path.join(COORDINATES_PATH, filename)
+
+    identity = 0
+    coordinates_yaml_list = []
+    for points in coordinates:
+        point_dict = dict()
+        point_dict['id'] = identity
+        point_dict['coordinates'] = np.array(points).astype(int).tolist()
+        coordinates_yaml_list.append(point_dict)
+        identity += 1
+
+    try:
+        with open(filename_with_path, 'w') as outputfile:
+            yaml.dump(coordinates_yaml_list, outputfile, default_flow_style=None)
+        status = True
+    except Exception as e:
+        logging.info(e)
+        status = False
+    return filename_with_path if status else False
+
+def update_coordinates_path_in_DB(camera_id, file_path):
+    status = CameraDetails.query.filter_by(id=camera_id).update(dict(coordinates=file_path))
+    db.session.commit()
+    return status
+
+def edit_camera_info_using_id(camera_id, coordinates):
+    status = False
+    filename_with_path = write_coordinates_to_the_file(camera_id, coordinates)
+    if filename_with_path:
+        status = update_coordinates_path_in_DB(camera_id, filename_with_path)
     return status
 
 def get_cameraId_with_coordinates_and_videoURL(camera_id):
     cameraId_with_coordinates_and_videoURL = {
-        'camera1': {
+        '1': {
             'coordinates': 'data/availability3.yml',
             'video': 'videos/parking_video7.mp4'
         },
-        'camera2': {
+        '3': {
             'coordinates': 'data/coordinates_1.yml',
             'video': 'videos/parking_lot_1.mp4'
         }

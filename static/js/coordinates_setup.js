@@ -54,8 +54,22 @@ $(document).ready(function () {
         $("#canvas_block").show();
     });
 
-    $(document).on("click", "#submit_coordinates", function() {
-        console.log(finalArrayOfCoordinates);
+    $('#submit_coordinates').bind('click', function() {
+        var camera_id = window.location.href.split("/").pop();
+        var url = `/edit-coordinates/${camera_id}`;
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: JSON.stringify({'coordinates': finalArrayOfCoordinates}),
+            contentType: 'application/json;charset=UTF-8',
+            success: function (msg) {
+                console.log(msg);
+            },
+            error: function (err) {
+                console.log(err);
+            },
+        });
+        return false;
     });
 
 });
