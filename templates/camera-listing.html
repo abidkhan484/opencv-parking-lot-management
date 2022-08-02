@@ -21,7 +21,7 @@
         <td>{{ camera_info.coordinates_path }}</td>
         <td>
           <a href="{{ camera_info.edit_url }}">Edit Coordinates</a> | 
-          <a href="{{ camera_info.delete_url }}">Delete</a>
+          <a onclick="return confirm('Are you sure to delete the content?')" href="{{ camera_info.delete_url }}">Delete</a>
         </td>
       </tr>
     {% endfor %}
